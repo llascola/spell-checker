@@ -1,6 +1,6 @@
 #ifndef __TRIE_H__
 #define __TRIE_H__
-#define NUM_CHARS 26
+#define NUM_CHARS 25
 #include <stdbool.h>
 
 struct _TNode {
@@ -19,4 +19,6 @@ bool trie_insert(Trie *t, char *wrd);
 bool trie_search(Trie t, char *wrd);
 
 bool trie_delete(Trie *t, char *wrd);
+
+void trie_print(Trie t_root, char* buff, int *count);
 #endif
