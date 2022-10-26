@@ -14,7 +14,7 @@ Trie trie_make() {
 }
 
 static inline unsigned char table_to_ch(int tb){
-	return tb + 61;
+	return tb + 97;
 }
 
 static inline int ch_to_table(unsigned char ch) {
@@ -40,7 +40,7 @@ bool trie_insert(Trie *t_root, char *wrd) {
 
 	Trie tmp = *t_root;
 
-	for (int i = 0; wrd[i] != 0 ; i++) {
+	for (int i = 0; wrd[i] != '\n' && wrd[i] != 0 ; i++) {
 		int c = ch_to_table(wrd[i]);
 		if (tmp->chars[c] == NULL)
 			tmp->chars[c] = trie_make();
@@ -51,10 +51,10 @@ bool trie_insert(Trie *t_root, char *wrd) {
 
 bool trie_search(Trie t_root, char *wrd) {
 	Trie tmp = t_root;
-	for (int i = 0;wrd[i] != 0 ; i++) {
-		if (tmp->chars[wrd[i]] == NULL) 
+	for (int i = 0; wrd[i] != 0; i++) {
+		if (tmp->chars[ch_to_table(wrd[i])] == NULL) 
 			return false;
-		tmp = tmp->chars[wrd[i]];
+		tmp = tmp->chars[ch_to_table(wrd[i])];
 	}
 	return tmp->terminal;
 }
@@ -62,15 +62,15 @@ bool trie_search(Trie t_root, char *wrd) {
 bool trie_delete(Trie *t_root, char *wrd) {
 	Trie tmp = *t_root;
 	for (int i = 0; wrd[i] != 0; i++) {
-		if (tmp->chars[wrd[i]] == NULL) 
+		if (tmp->chars[ch_to_table(wrd[i])] == NULL) 
 			return true;
-		tmp = tmp->chars[wrd[i]];
+		tmp = tmp->chars[ch_to_table(wrd[i])];
 	}
 	return !(tmp->terminal = false);
 }
 
 
-void trie_print(Trie t_root, char* buff, int *count){
+void trie_print_1(Trie t_root, char* buff, int *count){
 	if (t_root != NULL) {
 		if (t_root->terminal == true){
 			buff[++(*count)] = 0;
@@ -80,8 +80,15 @@ void trie_print(Trie t_root, char* buff, int *count){
 		for (int i = 0; i < NUM_CHARS; i++) {
 			buff[*count] = table_to_ch(i);
 			(*count)++;
-			trie_print(t_root->chars[i], buff, count);
+			trie_print_1(t_root->chars[i], buff, count);
 		}
 	(*count)--;
+}	else
+		(*count)--;
+}
+
+void trie_print(Trie t_root, char* buff){
+	int count = 0;
+	trie_print_1(t_root, buff, &count);
 }
 
