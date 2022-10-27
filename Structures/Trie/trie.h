@@ -1,6 +1,6 @@
 #ifndef __TRIE_H__
 #define __TRIE_H__
-#define NUM_CHARS 266
+#define NUM_CHARS 26
 #include <stdbool.h>
 
 struct _TNode {
