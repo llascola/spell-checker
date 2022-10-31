@@ -3,6 +3,7 @@
 
 typedef void (*DestroyFunc)(void *);
 typedef void (*VisitorFunc)(void *);
+typedef int (*CompareFunc)(void *data1, void *data2);
 typedef void *(*CopyFunc)(void *);
 
 typedef enum {
