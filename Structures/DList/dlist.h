@@ -17,10 +17,12 @@ typedef struct _DNode {
 	struct _DNode *prev;
 } DNode;
 
-typedef struct {
+struct _DList{
 	DNode *first;
 	DNode *last;
-} DList;
+};
+
+typedef struct _DList* DList;
 
 DList dlist_make();
 
@@ -30,11 +32,17 @@ void dlist_destroy(DList list, DestroyFunc destf);
 
 void dlist_tour(DList list, VisitorFunc visitf, Order ord);
 
-DList dlist_insert(DList list, void *data, CopyFunc copyf, Order ord);
+int dlist_insert(DList list, void *data, CopyFunc copyf, Order ord);
 
 void* dlist_data(DList list, unsigned int pos, CopyFunc copyf);
 
-DList dlist_delete(DList lista, unsigned int pos, DestroyFunc destf);
+int dlist_delete(DList list, void* data, CompareFunc cmpf, DestroyFunc dstf);
+
+int dlist_delete_pos(DList lista, unsigned int pos, DestroyFunc destf);
+
+int dlist_search(DList list, void* data, CompareFunc cmpf);
+
+int dlist_insearch(DList list, void* data, CompareFunc cmpf, CopyFunc cpyf);
 
 #endif
 

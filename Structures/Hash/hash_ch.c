@@ -22,6 +22,19 @@ void chash_destroy(CHash hstb) {
 }
 
 int chash_insert(CHash hstb, void* data) {
-	dlist_insert(hstb->table[hstb->hashf(data, hstb->buckets)], data, hstb->cpyf,
-							 BACKWARD);
+	int i = hstb->hashf(data, hstb->buckets);
+	if (dlist_search(hstb->table[i], data, hstb->cmpf))
+		return 0;
+	else
+		return dlist_insert(hstb->table[i], data, hstb->cpyf, BACKWARD);
+}
+
+int chash_search(CHash hstb, void* data) {
+	int i = hstb->hashf(data, hstb->buckets);
+	return dlist_search(hstb->table[i], data, hstb->cmpf);
+}
+
+int chash_delete(CHash hstb, void* data) {
+	int i = hstb->hashf(data, hstb->buckets);
+	return dlist_delete(hstb->table[i], data, hstb->cmpf, hstb->dstf);
 }
