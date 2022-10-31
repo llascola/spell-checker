@@ -4,20 +4,19 @@
 
 typedef unsigned int (*HashFunc)(void *data, int sizeTable);
 
-typedef struct _CHash {
+struct _CHash {
 	unsigned int buckets;
-	unsigned int sizeTable;
+	unsigned int elements;
 	DList* table;
 	CopyFunc cpyf;
 	DestroyFunc dstf;
-	VisitorFunc vistf;
 	CompareFunc cmpf;
 	HashFunc hashf;
-} CHash;
+};
+typedef struct _CHash* CHash;
 
-
-CHash chash_make(unsigned int buckets, CompareFunc cpyf, DestroyFunc dstf, 
-								 VisitorFunc vistf, CompareFunc cmpf, HashFunc hashf);
+CHash chash_make(unsigned int buckets, CopyFunc cpyf, DestroyFunc dstf, 
+								 CompareFunc cmpf, HashFunc hashf);
 
 void chash_destroy(CHash hstb);
 
@@ -28,8 +27,5 @@ int chash_search(CHash hstb, void* data);
 int chash_delete(CHash hstb, void* data);
 
 int chash_rehash(CHash hstb);
-
-
-
 
 #endif
