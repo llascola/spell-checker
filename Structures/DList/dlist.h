@@ -1,10 +1,11 @@
 #ifndef __DLIST_H__
 #define __DLIST_H__
 
-typedef void (*DestroyFunc)(void *);
-typedef void (*VisitorFunc)(void *);
+typedef void (*DestroyFunc)(void *data);
+typedef void (*VisitorFunc)(void *data);
+typedef void (*VisitExtFunc)(void *data, void* dataExt);
 typedef int (*CompareFunc)(void *data1, void *data2);
-typedef void *(*CopyFunc)(void *);
+typedef void *(*CopyFunc)(void *data);
 
 typedef enum {
 	FORWARD,
@@ -31,6 +32,8 @@ int dlist_empty(DList list);
 void dlist_destroy(DList list, DestroyFunc destf);
 
 void dlist_tour(DList list, VisitorFunc visitf, Order ord);
+
+void dlist_tour_ext(DList list, VisitExtFunc visitf, void *data, Order ord);
 
 int dlist_insert(DList list, void *data, CopyFunc copyf, Order ord);
 

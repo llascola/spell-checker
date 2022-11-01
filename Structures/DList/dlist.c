@@ -50,6 +50,29 @@ void dlist_tour(DList list, VisitorFunc visitf, Order ord) {
 	}
 }
 
+void dlist_tour_ext(DList list, VisitExtFunc visitf, void* dataExt, Order ord) {
+	if (!dlist_empty(list)) {
+		if (ord == 0) {
+			DNode *temp = list->first;
+			while (temp != list->last) {
+				DNode *tbdest = temp;
+				temp = tbdest->next;
+				visitf(tbdest->data, dataExt);
+			}
+			visitf(list->last->data, dataExt);
+		} else if (ord == 1) {
+			DNode *temp = list->last;
+			while (temp != list->first) {
+				DNode *tbdest = temp;
+				temp = tbdest->prev;
+				visitf(tbdest->data, dataExt);
+			}
+			visitf(list->first->data, dataExt);
+		} else {assert(0);} 
+	}
+
+}
+
 int dlist_insert(DList list, void *data, CopyFunc copyf, Order ord) {
 	DNode *newNode;
 	assert((newNode = malloc(sizeof(struct _DNode))) != NULL);
