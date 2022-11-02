@@ -1,6 +1,7 @@
 #include "dlist.h"
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 DList dlist_make() {
 	DList newList;
@@ -17,14 +18,17 @@ int dlist_empty(DList list) {
 void dlist_destroy(DList *list, DestroyFunc destf) {
 	if (!dlist_empty(*list)) {
 		DNode *temp = (*list)->first;
-		while (temp != (*list)->last) {
+		while (temp->next) {
+//			printf("While\n");
 			DNode *tbdest = temp;
 			temp = tbdest->next;
 			destf(tbdest->data);
 			free(tbdest);
 		}
-		destf((*list)->last->data);
-		free((*list)->last);
+//		printf("nWhile\n");
+		destf(temp->data);
+//		printf("nWhile\n");
+		free(temp);
 	}
 	free(*list);
 }
@@ -142,4 +146,24 @@ int dlist_search(DList list, void* data, CompareFunc cmpf) {
 			tmp = tmp->next);
 	return flag;
 }
+
+//int dlist_insearch(DList list, void* data, CompareFunc cmpf, CopyFunc cpyf) {
+//	DNode *newNode;
+//	if (dlist_empty(list)) {
+//		assert((newNode = malloc(sizeof(struct _DNode))) != NULL);
+//		newNode->data = cpyf(data);
+//		list->first = list->last = newNode;
+//		newNode->prev = newNode->next = NULL;
+//		return 1;
+//	} else {
+//		int flag;
+//		for(DNode* tmp = list->first;
+//				!(flag = cmpf(data, tmp->data)) && tmp->next != NULL;
+//				tmp = tmp->next);
+//		if (flag) {
+//			
+//		}
+//	} 
+//	return 1;
+//}
 
