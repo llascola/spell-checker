@@ -17,8 +17,17 @@ CHash chash_make(unsigned int buckets, CopyFunc cpyf, DestroyFunc dstf,
 }
 
 void chash_destroy(CHash hstb) {
-	for (int i = 0; i < hstb->buckets; i++)
-		dlist_destroy(hstb->table[i], hstb->dstf);
+	for (unsigned int i = 0; i < hstb->buckets; i++)
+		dlist_destroy(&hstb->table[i], hstb->dstf);
+}
+
+void chash_insert_tour(void* data, void* hstb) {
+	int i = ((CHash)hstb)->hashf(data, ((CHash)hstb)->buckets);
+	if (dlist_search(((CHash)hstb)->table[i], data, ((CHash)hstb)->cmpf))
+		return;
+	else
+		dlist_insert(((CHash)hstb)->table[i], data, ((CHash)hstb)->cpyf, BACKWARD);
+	return;
 }
 
 int chash_rehash(CHash hstb) {
@@ -27,9 +36,9 @@ int chash_rehash(CHash hstb) {
 		hstb->buckets = hstb->buckets * 2;
 		DList *tmp = hstb->table;
 		hstb->table = calloc(hstb->buckets, sizeof(DList));
-		for(int i = 0; i < oldSize; i++) {
-			dlist_tour_ext(tmp[i], (VisitExtFunc)chash_insert, (void*) hstb, FORWARD);
-			dlist_destroy(tmp[i], hstb->dstf);
+		for(unsigned int i = 0; i < oldSize; i++) {
+			dlist_tour_ext(tmp[i], chash_insert_tour, (void*) hstb, FORWARD);
+			dlist_destroy(&tmp[i], hstb->dstf);
 		}
 		free(tmp);
 		return 1;
@@ -37,12 +46,13 @@ int chash_rehash(CHash hstb) {
 		return 0;
 }
 
-int chash_insert(void* data, void* hstb) {
-	int i = ((CHash)hstb)->hashf(data, ((CHash)hstb)->buckets);
-	if (dlist_search(((CHash)hstb)->table[i], data, ((CHash)hstb)->cmpf) && chash_rehash((CHash)hstb))
+
+int chash_insert(CHash hstb, void* data) {
+	int i = hstb->hashf(data, hstb->buckets);
+	if (dlist_search(hstb->table[i], data, hstb->cmpf) && chash_rehash(hstb))
 		return 0;
 	else
-		return dlist_insert(((CHash)hstb)->table[i], data, ((CHash)hstb)->cpyf, BACKWARD);
+		return dlist_insert(hstb->table[i], data, hstb->cpyf, BACKWARD);
 }
 
 

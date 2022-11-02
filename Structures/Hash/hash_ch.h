@@ -20,7 +20,7 @@ CHash chash_make(unsigned int buckets, CopyFunc cpyf, DestroyFunc dstf,
 
 void chash_destroy(CHash hstb);
 
-int chash_insert(void* data,void* hstb);
+int chash_insert(CHash hstb, void* data);
 
 int chash_search(CHash hstb, void* data);
 

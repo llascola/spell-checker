@@ -14,18 +14,19 @@ int dlist_empty(DList list) {
 	return list->first == NULL;
 }
 
-void dlist_destroy(DList list, DestroyFunc destf) {
-	if (!dlist_empty(list)) {
-		DNode *temp = list->first;
-		while (temp != list->last) {
+void dlist_destroy(DList *list, DestroyFunc destf) {
+	if (!dlist_empty(*list)) {
+		DNode *temp = (*list)->first;
+		while (temp != (*list)->last) {
 			DNode *tbdest = temp;
 			temp = tbdest->next;
 			destf(tbdest->data);
 			free(tbdest);
 		}
-		destf(list->last->data);
-		free(list->last);
+		destf((*list)->last->data);
+		free((*list)->last);
 	}
+	free(*list);
 }
 
 void dlist_tour(DList list, VisitorFunc visitf, Order ord) {
@@ -96,7 +97,7 @@ void *dlist_data(DList list, unsigned int pos, CopyFunc copyf) {
 	if (dlist_empty(list))
 		return NULL;
 	DNode* temp = list->first;
-	for (int i = 0; i < pos && temp->next != NULL; temp = temp->next);
+	for (unsigned int i = 0; i < pos && temp->next != NULL; temp = temp->next);
 	return copyf(temp->data);
 }
 
@@ -121,7 +122,7 @@ int dlist_delete_pos(DList list, unsigned int pos, DestroyFunc destf) {
 	if (dlist_empty(list))
 		return 1;
 	DNode* temp = list->first;
-	for (int i = 0; i < pos && temp->next != NULL; temp = temp->next);
+	for (unsigned int i = 0; i < pos && temp->next != NULL; temp = temp->next);
 	if (temp->next == NULL){
 		list->last = temp->prev;
 		list->last->next = NULL;

@@ -29,7 +29,7 @@ DList dlist_make();
 
 int dlist_empty(DList list);
 
-void dlist_destroy(DList list, DestroyFunc destf);
+void dlist_destroy(DList *list, DestroyFunc destf);
 
 void dlist_tour(DList list, VisitorFunc visitf, Order ord);
 
