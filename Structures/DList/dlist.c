@@ -88,13 +88,13 @@ int dlist_insert(DList list, void *data, CopyFunc copyf, Order ord) {
 	} else if (ord == 0) {
 		newNode->prev = NULL;
 		newNode->next = list->first;
-		list->first = newNode;
+		list->first = list->first->prev = newNode;
 	} else if (ord == 1) {
 		newNode->prev = list->last;
 		newNode->next = NULL;
-		list->last = newNode;
+		list->last = list->last->next = newNode;
 	} else {assert(0);}
-	return 1;
+	return 0;
 }
 
 void *dlist_data(DList list, unsigned int pos, CopyFunc copyf) {
@@ -107,19 +107,33 @@ void *dlist_data(DList list, unsigned int pos, CopyFunc copyf) {
 
 int dlist_delete(DList list, void* data, CompareFunc cmpf, DestroyFunc dstf) {
 	if (dlist_empty(list))
-		return 0;
-	int flag;
-	DNode* tmp = list->first;
-	for(;
-			!(flag = cmpf(data, tmp->data)) && tmp->next != NULL;
-			tmp = tmp->next);
-	if (flag) {
-		tmp->prev->next = tmp->next;
-		dstf(tmp->data);
-		free(tmp);
 		return 1;
-	} else 
-		return 0;
+	int flag = 0;
+	DNode* tmp = list->first;
+	for(;(flag = cmpf(data, tmp->data)) && tmp->next;tmp = tmp->next);
+	if (flag)
+		return 1;
+	if (!(flag = (long)list->first->next)) 
+		list->first = list->last = NULL;
+	if (tmp->next) 
+		tmp->next->prev = tmp->prev;
+	if (flag)
+		tmp->prev->next = tmp->next;
+	dstf(tmp->data);
+	free(tmp);
+	return 0;
+//	if (!flag && list->first->next) {
+//		tmp->prev->next = tmp->next;
+//		dstf(tmp->data);
+//		free(tmp);
+//		return 1;
+//	} else if (!flag) {
+//		dstf(tmp->data);
+//		free(tmp);
+//		list->first = list->last = NULL;
+//		return 1;
+//	} 
+//	return 0;		
 }
 
 int dlist_delete_pos(DList list, unsigned int pos, DestroyFunc destf) {
@@ -134,15 +148,15 @@ int dlist_delete_pos(DList list, unsigned int pos, DestroyFunc destf) {
 		temp->prev->next = temp->next;
 	destf(temp->data);
 	free(temp);
-	return 1;
+	return 0;
 }
 
 int dlist_search(DList list, void* data, CompareFunc cmpf) {
 	if (dlist_empty(list))
-		return 0;
+		return 1;
 	int flag;
 	for(DNode* tmp = list->first;
-			!(flag = cmpf(data, tmp->data)) && tmp->next != NULL;
+			(flag = cmpf(data, tmp->data)) && tmp->next;
 			tmp = tmp->next);
 	return flag;
 }
