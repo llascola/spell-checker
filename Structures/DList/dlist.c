@@ -19,15 +19,12 @@ void dlist_destroy(DList *list, DestroyFunc destf) {
 	if (!dlist_empty(*list)) {
 		DNode *temp = (*list)->first;
 		while (temp->next) {
-//			printf("While\n");
 			DNode *tbdest = temp;
 			temp = tbdest->next;
 			destf(tbdest->data);
 			free(tbdest);
 		}
-//		printf("nWhile\n");
 		destf(temp->data);
-//		printf("nWhile\n");
 		free(temp);
 	}
 	free(*list);
@@ -101,7 +98,7 @@ void *dlist_data(DList list, unsigned int pos, CopyFunc copyf) {
 	if (dlist_empty(list))
 		return NULL;
 	DNode* temp = list->first;
-	for (unsigned int i = 0; i < pos && temp->next != NULL; temp = temp->next);
+	for (unsigned int i = 0; i < pos && temp->next; temp = temp->next);
 	return copyf(temp->data);
 }
 
@@ -117,8 +114,12 @@ int dlist_delete(DList list, void* data, CompareFunc cmpf, DestroyFunc dstf) {
 		list->first = list->last = NULL;
 	if (tmp->next) 
 		tmp->next->prev = tmp->prev;
+	else
+		list->last = tmp->prev;
 	if (flag)
 		tmp->prev->next = tmp->next;
+	if (tmp == list->first)
+		list->first = tmp->next;
 	dstf(tmp->data);
 	free(tmp);
 	return 0;
@@ -141,11 +142,16 @@ int dlist_delete_pos(DList list, unsigned int pos, DestroyFunc destf) {
 		return 1;
 	DNode* temp = list->first;
 	for (unsigned int i = 0; i < pos && temp->next != NULL; temp = temp->next);
-	if (temp->next == NULL){
+	if (list->first == temp) {
+		list->first = temp->next;
+		list->first->prev = NULL;
+	} else if (temp->next == NULL) {
 		list->last = temp->prev;
 		list->last->next = NULL;
-	} else 
+	} else {
 		temp->prev->next = temp->next;
+		temp->next->prev = temp->prev;
+	}
 	destf(temp->data);
 	free(temp);
 	return 0;
