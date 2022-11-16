@@ -27,7 +27,8 @@ void chash_destroy(CHash hstb) {
 
 void chash_insert_tour(void* data, void* hstb) {
 	int i = ((CHash)hstb)->hashf(data) % ((CHash)hstb)->buckets;
-if (((CHash)hstb)->table[i]
+	if (((CHash)hstb)->table[i] == NULL)
+		((CHash)hstb)->table[i] = dlist_make();
 	dlist_insert(((CHash)hstb)->table[i], data, ((CHash)hstb)->cpyf, BACKWARD);
 	return;
 }
@@ -39,8 +40,10 @@ int chash_rehash(CHash hstb) {
 		DList *tmp = hstb->table;
 		hstb->table = calloc(hstb->buckets, sizeof(DList));
 		for(int i = 0; i < oldSize; i++) {
-			dlist_tour_ext(tmp[i], chash_insert_tour, (void*) hstb, FORWARD);
-			dlist_destroy(&tmp[i], hstb->dstf);
+			if ( tmp[i] != NULL ) {
+				dlist_tour_ext(tmp[i], chash_insert_tour, (void*) hstb, FORWARD);
+				dlist_destroy(&tmp[i], hstb->dstf);
+			}
 		}
 		free(tmp);
 		return 1;
