@@ -2,20 +2,21 @@
 #define __HASHTB_CH_H__
 #include "../DList/dlist.h"
 
-typedef unsigned int (*HashFunc)(void *data, int sizeTable);
+typedef int (*HashFunc)(void *data);
 
 struct _CHash {
-	unsigned int buckets;
-	unsigned int elements;
+	int buckets;
+	int elements;
 	DList* table;
 	CopyFunc cpyf;
 	DestroyFunc dstf;
 	CompareFunc cmpf;
 	HashFunc hashf;
 };
+
 typedef struct _CHash* CHash;
 
-CHash chash_make(unsigned int buckets, CopyFunc cpyf, DestroyFunc dstf, 
+CHash chash_make(int buckets, CopyFunc cpyf, DestroyFunc dstf, 
 								 CompareFunc cmpf, HashFunc hashf);
 
 void chash_destroy(CHash hstb);
@@ -25,5 +26,7 @@ int chash_insert(CHash hstb, void* data);
 int chash_search(CHash hstb, void* data);
 
 int chash_delete(CHash hstb, void* data);
+
+void chash_visit(CHash hstb, VisitorFunc vistif); 
 
 #endif

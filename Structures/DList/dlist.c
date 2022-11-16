@@ -103,6 +103,8 @@ void *dlist_data(DList list, unsigned int pos, CopyFunc copyf) {
 }
 
 int dlist_delete(DList list, void* data, CompareFunc cmpf, DestroyFunc dstf) {
+	if (list == NULL)
+		return 1;
 	if (dlist_empty(list))
 		return 1;
 	int flag = 0;
@@ -158,6 +160,8 @@ int dlist_delete_pos(DList list, unsigned int pos, DestroyFunc destf) {
 }
 
 int dlist_search(DList list, void* data, CompareFunc cmpf) {
+	if (list == NULL)
+		return 1;
 	if (dlist_empty(list))
 		return 1;
 	int flag;
