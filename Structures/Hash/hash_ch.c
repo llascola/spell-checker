@@ -26,7 +26,7 @@ void chash_destroy(CHash hstb) {
 }
 
 void chash_insert_tour(void* data, void* hstb) {
-	int i = ((CHash)hstb)->hashf(data) % ((CHash)hstb)->buckets;
+	unsigned i = (unsigned)((CHash)hstb)->hashf(data) % ((CHash)hstb)->buckets;
 	if (((CHash)hstb)->table[i] == NULL)
 		((CHash)hstb)->table[i] = dlist_make();
 	dlist_insert(((CHash)hstb)->table[i], data, ((CHash)hstb)->cpyf, BACKWARD);
@@ -54,8 +54,7 @@ int chash_rehash(CHash hstb) {
 
 int chash_insert(CHash hstb, void* data) {
 	chash_rehash(hstb);
-	int i = (int)hstb->hashf(data) % hstb->buckets;
-	printf("%d\n", i);
+	unsigned i = (unsigned)hstb->hashf(data) % hstb->buckets;
 	if (hstb->table[i] == NULL) {
 		hstb->table[i] = dlist_make();
 		hstb->elements++;
