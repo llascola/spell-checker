@@ -70,12 +70,12 @@ int chash_insert(CHash hstb, void* data) {
 
 
 int chash_search(CHash hstb, void* data) {
-	int i = hstb->hashf(data) % hstb->buckets;
+	unsigned i = (unsigned)hstb->hashf(data) % hstb->buckets;
 	return dlist_search(hstb->table[i], data, hstb->cmpf);
 }
 
 int chash_delete(CHash hstb, void* data) {
-	int i = hstb->hashf(data) % hstb->buckets;
+	unsigned i = (unsigned)hstb->hashf(data) % hstb->buckets;
 	if (dlist_delete(hstb->table[i], data, hstb->cmpf, hstb->dstf))
 		return 1;
 	else
