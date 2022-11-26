@@ -10,58 +10,55 @@ Trie trie_make() {
 	for (int i = 0; i < NUM_CHARS; i++) 
 		t->chars[i] = NULL;
 	t->terminal = false;
+	t->suggestions = NULL;
 	return t;
 }
 
-//static inline unsigned char table_to_ch(int tb){
-//	return tb + 97;
-//}
-
-//static inline int ch_to_table(unsigned char ch) {
-//	if (97 <= ch && ch <= 122)
-//		return ch - 97;
-//	else if (65 <= ch && ch <= 90)
-//		return ch - 65;
-//	else
-//		return -1;
-//}
 void trie_destroy(Trie t){
 	if (t != NULL) {
-		for(int i = 0; i < NUM_CHARS; i++) 
+		for(int i = 0; i < NUM_CHARS; i++){ 
 				trie_destroy(t->chars[i]);
+				for(int j = 0; j < t->n_sugg; j++)
+					free(t->suggestions[j]);
+				free(t->suggestions);
+		}
 	free(t);
 	}
 }
 
-bool trie_insert(Trie *t_root, char *wrd) {
+bool trie_insert(Trie *t_root, char *wrd, int len, char** suggestions, int n_sugg) {
 	if (*t_root == NULL) 
 		*t_root = trie_make();
 
 	Trie tmp = *t_root;
 
-	for (int i = 0; wrd[i] != '\n' && wrd[i] != 0 ; i++) {
+	for (int i = 0; i < len; i++) {
 		int c = (unsigned char)wrd[i] - 97;
 		if (tmp->chars[c] == NULL)
 			tmp->chars[c] = trie_make();
 		tmp = tmp->chars[c];
 	}
+	tmp->n_sugg = n_sugg;
+	tmp->suggestions = suggestions;
 	return tmp->terminal = true;
 }
 
-bool trie_search(Trie t_root, char *wrd) {
+char** trie_search(Trie t_root, char *wrd, int len) {
 	Trie tmp = t_root;
-	for (int i = 0; wrd[i] != 0; i++) {
+	for (int i = 0; i < len; i++) {
 		int c = (unsigned char)wrd[i] - 97;
 		if (tmp->chars[c] == NULL) 
-			return false;
+			return (char**)1;
 		tmp = tmp->chars[c];
 	}
-	return tmp->terminal;
+	if (tmp->terminal)	
+		return tmp->suggestions;
+	return (char**)1;
 }
 
-bool trie_delete(Trie *t_root, char *wrd) {
+bool trie_delete(Trie *t_root, char *wrd, int len) {
 	Trie tmp = *t_root;
-	for (int i = 0; wrd[i] != 0; i++) {
+	for (int i = 0; i < len; i++) {
 		int c = (unsigned char)wrd[i] - 97;
 		if (tmp->chars[c] == NULL) 
 			return true;
