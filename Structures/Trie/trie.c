@@ -33,13 +33,13 @@ void trie_destroy(Trie t){
 	}
 }
 
-bool trie_insert(Trie *t_root, char *wrd) {
+bool trie_insert(Trie *t_root, char *wrd, int len) {
 	if (*t_root == NULL) 
 		*t_root = trie_make();
 
 	Trie tmp = *t_root;
 
-	for (int i = 0; wrd[i] != '\n' && wrd[i] != 0 ; i++) {
+	for (int i = 0; i < len ; i++) {
 		int c = (unsigned char)wrd[i] - 97;
 		if (tmp->chars[c] == NULL)
 			tmp->chars[c] = trie_make();
@@ -48,9 +48,9 @@ bool trie_insert(Trie *t_root, char *wrd) {
 	return tmp->terminal = true;
 }
 
-bool trie_search(Trie t_root, char *wrd) {
+bool trie_search(Trie t_root, char *wrd, int len) {
 	Trie tmp = t_root;
-	for (int i = 0; wrd[i] != 0; i++) {
+	for (int i = 0; i < len; i++) {
 		int c = (unsigned char)wrd[i] - 97;
 		if (tmp->chars[c] == NULL) 
 			return false;
@@ -59,9 +59,9 @@ bool trie_search(Trie t_root, char *wrd) {
 	return tmp->terminal;
 }
 
-bool trie_delete(Trie *t_root, char *wrd) {
+bool trie_delete(Trie *t_root, char *wrd, int len) {
 	Trie tmp = *t_root;
-	for (int i = 0; wrd[i] != 0; i++) {
+	for (int i = 0; i < len; i++) {
 		int c = (unsigned char)wrd[i] - 97;
 		if (tmp->chars[c] == NULL) 
 			return true;

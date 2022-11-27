@@ -14,11 +14,11 @@ Trie trie_make();
 
 void trie_destroy(Trie t);
 
-bool trie_insert(Trie *t, char *wrd);
+bool trie_insert(Trie *t, char *wrd, int len);
 
-bool trie_search(Trie t, char *wrd);
+bool trie_search(Trie t, char *wrd, int len);
 
-bool trie_delete(Trie *t, char *wrd);
+bool trie_delete(Trie *t, char *wrd, int len);
 
 void trie_print_1(Trie t_root, char* buff, int *count);
 
