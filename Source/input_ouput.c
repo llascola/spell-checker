@@ -51,20 +51,17 @@ void read_text(char* text_file_path, int func(char*, int, void*), void* data) {
 
 	while(!feof(text)) {
 		ch = tolower((unsigned char)getc(text));
-
 		if (97 <= ch && ch <= 123) {
 			buff[len] = ch;
 			len++;
 		} else {
-			
 			if (len != 0) {
 				func(buff, len, data);
 				len = 0;
 			}
-
 		}
-
 	}
-
 	fclose(text);
 }
+
+
