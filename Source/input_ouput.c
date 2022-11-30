@@ -50,20 +50,23 @@ CHash read_cache(char* cache_file_path) {
 }
 
 
-void read_text(char* text_file_path, int func(char*, int, void*), void* data) {
+void read_text(char* text_file_path, int func(char*, int, int, void*), void* data) {
 	FILE *text = fopen(text_file_path, "r");
 	int len = 0;
+	int line = 0;
 	char buff[255];
 	unsigned char ch;
 
 	while(!feof(text)) {
 		ch = tolower((unsigned char)getc(text));
+		if (ch == 10) // 10 <==> \n 
+			len++;
 		if (97 <= ch && ch <= 123) {
 			buff[len] = ch;
 			len++;
 		} else {
 			if (len != 0) {
-				func(buff, len, data);
+				func(buff, len, line, data);
 				len = 0;
 			}
 		}
