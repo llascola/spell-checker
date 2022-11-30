@@ -17,29 +17,36 @@ void read_dictionary(char* dict_file_path, Trie trie){
 			trie_insert(&trie, buff, len, 1);
 			len = 0;
 		}
-		
 	}
-	
 	fclose(file);
 }
 
-void read_cache(char* cache_file_path, CHash hstb) {
+static inline void *id(void *data){
+	return data;
+}
+
+static inline unsigned cache_hash(Cache cache) {
+	return hash(cache->wrd);
+} 
+
+CHash read_cache(char* cache_file_path) {
+	CHash hstb = chash_make(255, (CopyFunc) id,
+															 (DestroyFunc) cache_destroy,
+															 (CompareFunc) cache_compare,
+															 (HashFunc) cache_hash);
 	FILE *file = fopen(cache_file_path,"r");
-	char buff[255];
+	char buff_word[255];
+	char buff_suggs[255];
 	int amount;
 	unsigned char ch;
 
 	while (!feof(file)) {
-		Cache new_cache = malloc(sizeof(struct _Cache));
-		fscanf(file, "%[^,], %d", buff, &amount);
-		new_cache->wrd = malloc(sizeof(char) * (strlen(buff) + 1));	
-		strcpy(new_cache->wrd, buff);
-		new_cache->n_suggs = amount;
-		fscanf(file, "%[^\n]\n", buff);
-		new_cache->suggs = malloc(sizeof(char) * (strlen(buff) + 1));	
-		strcpy(new_cache->suggs, buff);
+		fscanf(file, "%[^,], %d", buff_word, &amount);
+		fscanf(file, "%[^\n]\n", buff_suggs);
+		Cache new_cache = cache_make(buff_word, buff_suggs, amount, 1);
 		chash_insert(hstb, (void*) new_cache);	
 	}
+	return hstb;
 }
 
 
@@ -63,5 +70,4 @@ void read_text(char* text_file_path, int func(char*, int, void*), void* data) {
 	}
 	fclose(text);
 }
-
 
