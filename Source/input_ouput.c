@@ -21,31 +21,22 @@ void read_dictionary(char* dict_file_path, Trie trie){
 	fclose(file);
 }
 
-static inline void *id(void *data){
-	return data;
-}
-
-static inline unsigned cache_hash(Cache cache) {
-	return hash(cache->wrd);
-} 
-
-CHash read_cache(char* cache_file_path) {
-	CHash hstb = chash_make(255, (CopyFunc) id,
-															 (DestroyFunc) cache_destroy,
-															 (CompareFunc) cache_compare,
-															 (HashFunc) cache_hash);
+CHash read_cache(char* cache_file_path, int table_size) {
+	CHash hstb = cache_hstb_make(table_size);
 	FILE *file = fopen(cache_file_path,"r");
 	char buff_word[255];
-	char buff_suggs[255];
-	int amount;
+	char buff_suggs[MAX_SUGGESTIONS][255];
+	int n_suggs;
 	unsigned char ch;
 
 	while (!feof(file)) {
-		fscanf(file, "%[^,], %d", buff_word, &amount);
-		fscanf(file, "%[^\n]\n", buff_suggs);
-		Cache new_cache = cache_make(buff_word, buff_suggs, amount, 1);
-		chash_insert(hstb, (void*) new_cache);	
+		fscanf(file, "%[^,], %d, ", buff_word, &n_suggs);
+		for (int i = 0; i < n_suggs - 1; i++)
+			fscanf(file, "%[^,], ", buff_suggs[i]);
+		fscanf(file, "%[^\n]\n", buff_suggs[n_suggs - 1]);
+		chash_insert(hstb, (void*) cache_make(buff_word, (char**)buff_suggs, n_suggs));
 	}
+	fclose(file);
 	return hstb;
 }
 
@@ -59,18 +50,21 @@ void read_text(char* text_file_path, int func(char*, int, int, void*), void* dat
 
 	while(!feof(text)) {
 		ch = tolower((unsigned char)getc(text));
-		if (ch == 10) // 10 <==> \n 
-			len++;
 		if (97 <= ch && ch <= 123) {
 			buff[len] = ch;
 			len++;
 		} else {
 			if (len != 0) {
+				buff[len] = '\0';
 				func(buff, len, line, data);
 				len = 0;
 			}
+			if (ch == 10) // 10 <=> '\n' 
+				line++;
 		}
 	}
 	fclose(text);
 }
+
+//void print_text_suggestions(const char* suggestion_file_path, char* wrd)
 
