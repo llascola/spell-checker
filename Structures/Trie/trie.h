@@ -4,7 +4,7 @@
 
 struct _TNode {
 	struct _TNode *chars[NUM_CHARS];
-	char terminal;
+	char state; 
 };
 
 typedef struct _TNode *Trie;
@@ -13,11 +13,11 @@ Trie trie_make();
 
 void trie_destroy(Trie t);
 
-int trie_insert(Trie *t, char *wrd, int len, char cache_status);
+char trie_insert(Trie *t, char *wrd, int len, const char* state);
 
-int trie_search(Trie t, char *wrd, int len);
+char trie_search(Trie t, char *wrd, int len);
 
-int trie_delete(Trie *t, char *wrd, int len);
+char trie_delete(Trie *t, char *wrd, int len);
 
 void trie_print(Trie t_root, char* buff);
 #endif

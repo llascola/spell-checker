@@ -9,7 +9,7 @@ Trie trie_make() {
 	assert(t);
 	for (int i = 0; i < NUM_CHARS; i++) 
 		t->chars[i] = NULL;
-	t->terminal = 0;
+	t->state = 0;
 	return t;
 }
 
@@ -21,7 +21,7 @@ void trie_destroy(Trie t){
 	}
 }
 
-int trie_insert(Trie *t_root, char *wrd, int len, char cache_status) {
+char trie_insert(Trie *t_root, char *wrd, int len, const char* state) {
 	if (*t_root == NULL) 
 		*t_root = trie_make();
 
@@ -33,10 +33,10 @@ int trie_insert(Trie *t_root, char *wrd, int len, char cache_status) {
 			tmp->chars[c] = trie_make();
 		tmp = tmp->chars[c];
 	}
-	return tmp->terminal = cache_status;
+	return tmp->state = *state;
 }
 
-int trie_search(Trie t_root, char *wrd, int len) {
+char trie_search(Trie t_root, char *wrd, int len) {
 	Trie tmp = t_root;
 	for (int i = 0; i < len; i++) {
 		int c = (unsigned char)wrd[i] - 97;
@@ -44,10 +44,10 @@ int trie_search(Trie t_root, char *wrd, int len) {
 			return -1;
 		tmp = tmp->chars[c];
 	}
-	return tmp->terminal;
+	return tmp->state;
 }
 
-int trie_delete(Trie *t_root, char *wrd, int len) {
+char trie_delete(Trie *t_root, char *wrd, int len) {
 	Trie tmp = *t_root;
 	for (int i = 0; i < len; i++) {
 		int c = (unsigned char)wrd[i] - 97;
@@ -55,13 +55,13 @@ int trie_delete(Trie *t_root, char *wrd, int len) {
 			return 0;
 		tmp = tmp->chars[c];
 	}
-	return !(tmp->terminal = 0);
+	return !(tmp->state = 0);
 }
 
 
 void trie_print_1(Trie t_root, char* buff, int *count){
 	if (t_root != NULL) {
-		if (t_root->terminal == 1){
+		if (t_root->state != 0){
 			buff[++(*count)] = 0;
 			printf("%s\n", buff);
 			--(*count);
