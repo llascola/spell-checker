@@ -1,15 +1,17 @@
 #ifndef __DISTANCES__
 #define __DISTANCES__
+#define INIT_HSTB_SIZE 1500
+#include "../Structures/Hash/hash_ch.h"
+#include "utils.h"
 
-typedef void (*VisitorFunc)(char *w, int len, void* data);
+struct _Word{
+	char* word;
+	int len;
+};
 
-int dist_adycnt_perm(char *w, int len,VisitorFunc func, void* data);
+typedef struct _Word* Word;
 
-int dist_insertion(char *w, int len, char* buff, VisitorFunc func, void* data);
 
-int dist_deletion(char *w, int len, VisitorFunc func, void* data);
+CHash dist_hstb_make();
 
-int dist_remplacement(char *w, int len,VisitorFunc func, void* data);
-
-int dist_splitting(char *w, int len,VisitorFunc func, void* data);
 #endif
