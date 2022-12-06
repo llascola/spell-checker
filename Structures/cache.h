@@ -1,7 +1,6 @@
 #ifndef __CACHE__
 #define __CACHE__
 #define MAX_SUGGESTIONS 5
-#include "../Structures/Hash/hash_ch.h"
 #include "utils.h"
 
 struct _Cache {
@@ -14,9 +13,9 @@ typedef struct _Cache* Cache;
 
 Cache cache_make(char* wrd, char** sgg, int n_suggs);
 
-void cache_destroy(Cache* cache);
+void cache_destroy(Cache* cache); 
 
-CHash cache_hstb_make(int table_size);
+int cache_compare(Cache cache1, Cache cache2);
 
 #endif
 

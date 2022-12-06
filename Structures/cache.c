@@ -22,18 +22,5 @@ int cache_compare(Cache cache1, Cache cache2) {
 	return strcmp(cache1->wrd, cache2->wrd);
 }
 
-static inline void *id(void *data) {
-	return data;
-}
 
-static inline unsigned cache_hash(Cache cache) {
-	return hash(cache->wrd);
-}
 
-CHash cache_hstb_make(int table_size){
-	return chash_make(table_size,
-										(CopyFunc) id,
-										(DestroyFunc) cache_destroy,
-										(CompareFunc) cache_compare,
-										(HashFunc) cache_hash);
-}
