@@ -13,10 +13,14 @@ struct _Data {
 	CHash *hstb;
 	int dist;
 	int flag;
+	int len;
+	int line;
+	VisitFunc fun1;
+	VisitFunc2 fun2;
 };
 
 typedef struct _Data* Data;
 
-Data data_make(Trie* trie, CHash* cache_hstb, char* word, int len);
+Data data_make(Trie trie, CHash cache_hstb, char* word, int len);
 
 #endif

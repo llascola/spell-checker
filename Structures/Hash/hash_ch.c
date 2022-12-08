@@ -88,3 +88,9 @@ void chash_visit(CHash hstb, VisitorFunc vistif) {
 		if (hstb->table[i] != NULL)
 			dlist_tour(hstb->table[i], vistif, FORWARD);
 }
+
+void chash_visit_extra(CHash hstb, VisitorFunc vistif) {
+	for (int i = 0; i < hstb->buckets; i++) 
+		if (hstb->table[i] != NULL)
+			dlist_tour(hstb->table[i], vistif, FORWARD);
+}

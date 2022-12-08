@@ -67,16 +67,13 @@ int dist_remplace(char *w, int len, void* data, void func(char*,int,void*)) {
 	return 0;
 }
 
-int dist_split(char *w1, int len, void* data, void func(char*,int,void*)) {
-	char* w2 = w1 + 1;
-	int len1 = 1;
-	int len2 = len - 1;
-	for (int i = 0; i < len - 1; i++) {
-		func(w1, len1, data);
-		func(w2, len2, data);
-		len1 += 1;
-		len2 -= 1;
-		w2 += 1;
+int dist_split(char *w, int len, char* buff, void* data, VisitFunc2 func) {
+	int buffLen = len + 1;
+	memcpy(buff + 1, w, buffLen + 1);
+	for (int i = 1; i < len; i++) {
+		buff[i - 1] = buff[i];
+		buff[i] = *" ";
+		func(buff, i, len - i, data);
 	}
 	return 0;	
 }
