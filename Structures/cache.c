@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Cache cache_make(char* word, int len, char cached){
+Cache cache_make(char* word,int len, char cached){
 	Cache new_cache = malloc(sizeof(struct _Cache));
 	new_cache->wrd = malloc(sizeof(char) * (len + 1));
 	memcpy(new_cache->wrd, word, len);
@@ -12,6 +12,14 @@ Cache cache_make(char* word, int len, char cached){
 	new_cache->cached = cached;
 
 	return new_cache;
+}
+
+inline int cache_n_sugg(Cache cache) {
+	return cache->n_suggs;
+}
+
+inline char** cache_sugg(Cache cache) {
+	return cache->suggs;
 }
 
 int cache_add_sugg(Cache cache, char* sugg, int len){

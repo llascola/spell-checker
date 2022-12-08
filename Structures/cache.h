@@ -18,6 +18,10 @@ Cache cache_make(char* word, int len, char cached);
 
 int cache_add_sugg(Cache cache, char* sugg, int len); 
 
+int cache_n_sugg(Cache cache);
+
+char** cache_sugg(Cache cache);
+
 void cache_destroy(Cache* cache); 
 
 int cache_compare(Cache cache1, Cache cache2);

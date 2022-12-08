@@ -1,19 +1,5 @@
 #include "corrector.h"
 
-struct _Data data_make(Trie trie, CHash cache_hstb){
-	struct _Data new_data; 
-	new_data.dict = trie;
-	new_data.flag = 0;
-	new_data.dist = 0;
-	new_data.hstb = malloc(sizeof(CHash) * MAX_DISTANCES);
-	new_data.hstb[0] = cache_hstb;
-  return new_data;
-}
-
-void data_add_cache(char* word, int len, Data data) {
-	data->cache = cache_make(word, len, NOT_CACHED);
-}
-
 Cache data_reset(Data data) {
 	Cache cache = data->cache;
 	data->flag = 0;
@@ -43,6 +29,22 @@ void sugg_look_up_2(char* word, int len1, int len2, Data data) {
 		data->flag = cache_add_sugg(data->cache, word, len1 + len2);
 	}
 } 
+
+struct _Data data_make(Trie trie, CHash cache_hstb){
+	struct _Data new_data; 
+	new_data.dict = trie;
+	new_data.fun1 = (VisitFunc)sugg_look_up_1;
+	new_data.fun2 = (VisitFunc2)sugg_look_up_2;
+	new_data.hstb[0] = cache_hstb;
+	new_data.flag = 0;
+	new_data.dist = 0;
+	new_data.hstb = malloc(sizeof(CHash) * MAX_DISTANCES);
+  return new_data;
+}
+
+void data_add_cache(char* word, int len, Data data) {
+	data->cache = cache_make(word, len, NOT_CACHED);
+}
 
 void dist_all(char* word,int len, Data data) {
 	dist_delet(word, len, data, data->fun1);

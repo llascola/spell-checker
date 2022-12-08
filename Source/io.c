@@ -5,7 +5,7 @@
 
 void assert_file(FILE* file){
 	if (file == NULL){
-		fprintf(stderr, "File openning fail,\n");
+		fprintf(stderr, "File openning error,\n");
 		exit(1);
 	}
 }
@@ -54,17 +54,24 @@ CHash read_cache(char* cacheFilePath, int table_size, Trie trie) {
 	FILE *cacheFile = fopen(cacheFilePath,"r");
 	assert_file(cacheFile);
 	char buffWord[255];
-	char buffSuggestions[MAX_SUGGESTIONS][255];
 	int numSugg;
+	int len;
 	unsigned char ch;
 
 	while (!feof(cacheFile)) {
 		fscanf(cacheFile, "%[^,], %d, ", buffWord, &numSugg);
-		trie_insert(&trie, buffWord, strlen(buffWord), "c");
-		for (int i = 0; i < numSugg - 1; i++)
-			fscanf(cacheFile, "%[^,], ", buffSuggestions[i]);
-		fscanf(cacheFile, "%[^\n]\n", buffSuggestions[numSugg - 1]);
-		chash_insert(hstb, (void*) cache_make(buffWord, (char**)buffSuggestions, numSugg));
+		len = strlen(buffWord);
+		trie_insert(&trie, buffWord, len, "c");
+		Cache cache = cache_make(buffWord, len, CACHED);
+		for (int i = 0; i < numSugg - 1; i++){
+			fscanf(cacheFile, "%[^,], ",buffWord); 
+			len = strlen(buffWord);
+			cache_add_sugg(cache, buffWord, len);
+		}
+		fscanf(cacheFile, "%[^\n]\n", buffWord);
+		len = strlen(buffWord);
+		cache_add_sugg(cache, buffWord, len);
+		chash_insert(hstb, (void*) cache);
 	}
 	fclose(cacheFile);
 	return hstb;
@@ -73,10 +80,14 @@ CHash read_cache(char* cacheFilePath, int table_size, Trie trie) {
 void print_text_suggestions(const char* suggestionFilePath, Cache cache, int line) {
 	FILE *suggestions = fopen(suggestionFilePath, "a");
 	assert_file(suggestions);
-	char **suggs = cache->suggs;
-	int numSugg = cache->n_suggs;
+	char **suggs = cache_sugg(cache);
+	int numSugg = cache_n_sugg(cache);
 
 	fprintf(suggestions, "Line %d, \"%s\" not found in the dictionaty.\n", line, cache->wrd);
+	if (!numSugg) {
+		fprintf(suggestions, "Suggestions not found.\n");
+		return;
+	}
 	fprintf(suggestions, "Maybe you meant: ");
 	for (int i = 0; i < numSugg - 1; i++)
 		fprintf(suggestions,"%s, ",suggs[i]);
@@ -88,8 +99,8 @@ void print_text_suggestions(const char* suggestionFilePath, Cache cache, int lin
 void print_cache_data(const char* cacheFilePath, Cache cache) {
 	FILE *cacheFile = fopen(cacheFilePath, "a");
 	assert_file(cacheFile);
-	char **suggs = cache->suggs;
-	int numSugg = cache->n_suggs;
+	char **suggs = cache_sugg(cache);
+	int numSugg = cache_n_sugg(cache);
 
 	fprintf(cacheFile, "%s, %d, ", cache->wrd, numSugg);
 	for (int i = 0; i < numSugg - 1; i++)

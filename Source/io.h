@@ -4,7 +4,7 @@
 #include "../Structures/Trie/trie.h"
 #include "tables.h"
 
-int get_text_wotablesrd(FILE* text, char* buff, int *line); 
+int get_text_word(FILE* text, char* buff, int *line); 
 
 void read_dictionary(char* dictFilePath, Trie trie);
 
