@@ -22,3 +22,7 @@ int word_compare(Word distWord1, Word distWord2) {
 	return strcmp(distWord1->word, distWord2->word);
 }
 
+void word_visit(Word word, void* data, void func(char*,int,void*)){
+	func(word->word, word->len, data);
+}
+

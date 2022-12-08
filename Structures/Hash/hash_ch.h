@@ -29,6 +29,5 @@ int chash_delete(CHash hstb, void* data);
 
 void chash_visit(CHash hstb, VisitorFunc vistif); 
 
-void chash_visit_extra(CHash hstb, VisitorFunc vistif);
-
+void chash_visit_extra(CHash hstb, void* data, VisitExtFunc vistif); 
 #endif

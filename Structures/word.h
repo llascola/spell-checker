@@ -14,4 +14,10 @@ void word_dest(Word *distWord);
 
 int word_compare(Word distWord1, Word distWord2);
 
+char* word_string(Word word);
+
+int word_len(Word word);
+
+void word_visit(Word word, void* data, void func(char*,int,void*));
+
 #endif

@@ -89,8 +89,8 @@ void chash_visit(CHash hstb, VisitorFunc vistif) {
 			dlist_tour(hstb->table[i], vistif, FORWARD);
 }
 
-void chash_visit_extra(CHash hstb, VisitorFunc vistif) {
+void chash_visit_extra(CHash hstb, void* data, VisitExtFunc vistif) {
 	for (int i = 0; i < hstb->buckets; i++) 
 		if (hstb->table[i] != NULL)
-			dlist_tour(hstb->table[i], vistif, FORWARD);
+			dlist_tour_ext(hstb->table[i], vistif, data, FORWARD);
 }
