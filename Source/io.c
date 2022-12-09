@@ -42,14 +42,14 @@ void read_dictionary(char* dictFilePath, Trie trie){
 			buff[len] = ch;
 			len++;
 		} else {
-			trie_insert(&trie, buff, len, "d");
+			trie_insert(&trie, buff, len);
 			len = 0;
 		}
 	}
 	fclose(dictFile);
 }
 
-CHash read_cache(char* cacheFilePath, int table_size, Trie trie) {
+CHash read_cache(char* cacheFilePath, int table_size) {
 	CHash hstb = cache_hstb_make(table_size);
 	FILE *cacheFile = fopen(cacheFilePath,"r");
 	assert_file(cacheFile);
@@ -61,7 +61,6 @@ CHash read_cache(char* cacheFilePath, int table_size, Trie trie) {
 	while (!feof(cacheFile)) {
 		fscanf(cacheFile, "%[^,], %d, ", buffWord, &numSugg);
 		len = strlen(buffWord);
-		trie_insert(&trie, buffWord, len, "c");
 		Cache cache = cache_make(buffWord, len, CACHED);
 		for (int i = 0; i < numSugg - 1; i++){
 			fscanf(cacheFile, "%[^,], ",buffWord); 

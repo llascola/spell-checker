@@ -43,7 +43,7 @@ int dlist_delete(DList list, void* data, CompareFunc cmpf, DestroyFunc dstf);
 
 int dlist_delete_pos(DList lista, unsigned int pos, DestroyFunc destf);
 
-int dlist_search(DList list, void* data, CompareFunc cmpf);
+void* dlist_search(DList list, void* data, CompareFunc cmpf); 
 
 int dlist_insearch(DList list, void* data, CompareFunc cmpf, CopyFunc cpyf);
 

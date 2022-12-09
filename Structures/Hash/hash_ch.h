@@ -23,7 +23,7 @@ void chash_destroy(CHash hstb);
 
 int chash_insert(CHash hstb, void* data);
 
-int chash_search(CHash hstb, void* data);
+void* chash_search(CHash hstb, void* data);
 
 int chash_delete(CHash hstb, void* data);
 

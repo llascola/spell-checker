@@ -21,7 +21,7 @@ void trie_destroy(Trie t){
 	}
 }
 
-char trie_insert(Trie *t_root, char *wrd, int len, const char* state) {
+char trie_insert(Trie *t_root, char *wrd, int len) {
 	if (*t_root == NULL) 
 		*t_root = trie_make();
 
@@ -33,7 +33,7 @@ char trie_insert(Trie *t_root, char *wrd, int len, const char* state) {
 			tmp->chars[c] = trie_make();
 		tmp = tmp->chars[c];
 	}
-	return tmp->state = *state;
+	return tmp->state = 1;
 }
 
 char trie_search(Trie t_root, char *wrd, int len) {

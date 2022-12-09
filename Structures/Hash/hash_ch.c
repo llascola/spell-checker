@@ -60,16 +60,11 @@ int chash_insert(CHash hstb, void* data) {
 		hstb->elements++;
 		return dlist_insert(hstb->table[i], data, hstb->cpyf, BACKWARD);
 	}
-	if (dlist_search(hstb->table[i], data, hstb->cmpf)){
-		hstb->elements++;
-		return dlist_insert(hstb->table[i], data, hstb->cpyf, BACKWARD);
-	}
-	else 
-		return 1;
+	hstb->elements++;
+	return dlist_insert(hstb->table[i], data, hstb->cpyf, BACKWARD);
 }
 
-
-int chash_search(CHash hstb, void* data) {
+void* chash_search(CHash hstb, void* data) {
 	unsigned i = (unsigned)hstb->hashf(data) % hstb->buckets;
 	return dlist_search(hstb->table[i], data, hstb->cmpf);
 }

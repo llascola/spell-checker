@@ -13,7 +13,7 @@ Trie trie_make();
 
 void trie_destroy(Trie t);
 
-char trie_insert(Trie *t, char *wrd, int len, const char* state);
+char trie_insert(Trie *t, char *wrd, int len);
 
 char trie_search(Trie t, char *wrd, int len);
 

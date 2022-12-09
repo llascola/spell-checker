@@ -159,16 +159,15 @@ int dlist_delete_pos(DList list, unsigned int pos, DestroyFunc destf) {
 	return 0;
 }
 
-int dlist_search(DList list, void* data, CompareFunc cmpf) {
+void* dlist_search(DList list, void* data, CompareFunc cmpf) {
 	if (list == NULL)
-		return 1;
+		return NULL;
 	if (dlist_empty(list))
-		return 1;
+		return NULL;
 	int flag;
-	for(DNode* tmp = list->first;
-			(flag = cmpf(data, tmp->data)) && tmp->next;
-			tmp = tmp->next);
-	return flag;
+	DNode* tmp;
+	for(;(flag = cmpf(data, tmp->data)) && tmp->next;tmp = tmp->next);
+	return flag?NULL:tmp->data;
 }
 
 //int dlist_insearch(DList list, void* data, CompareFunc cmpf, CopyFunc cpyf) {

@@ -8,7 +8,7 @@ int get_text_word(FILE* text, char* buff, int *line);
 
 void read_dictionary(char* dictFilePath, Trie trie);
 
-CHash read_cache(char* cacheFilePath, int size_table, Trie trie);
+CHash read_cache(char* cacheFilePath, int size_table);
 
 void print_text_suggestions(const char* suggestionFilePath, Cache cache, int line);
 
