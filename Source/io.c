@@ -66,7 +66,7 @@ CHash read_cache(char* cacheFilePath, int table_size) {
 	while (!feof(cacheFile)) {
 		fscanf(cacheFile, "%[^,], %d, ", buffWord, &numSugg);
 		len = strlen(buffWord);
-		Cache cache = cache_make(buffWord, len, CACHED);
+		Cache cache = cache_make(buffWord, len);
 		for (int i = 0; i < numSugg - 1; i++){
 			fscanf(cacheFile, "%[^,], ",buffWord); 
 			len = strlen(buffWord);

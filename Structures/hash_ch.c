@@ -5,21 +5,25 @@
 #include <stdio.h>
 
 
-static void *id(void* data) { return data; }
+inline static void *id(void* data) { return data; }
 
-static void null(__attribute__((unused)) void *data) { return; }
+inline static void null(__attribute__((unused)) void *data) { return; }
 
 CHash chash_make(int buckets, CopyFunc cpyf, DestroyFunc dstf, 
 		 CompareFunc cmpf, HashFunc hashf) {
 	CHash hstb;
 	assert((hstb = malloc(sizeof(struct _CHash))));
-	assert((hstb->table = calloc(buckets, sizeof(DList))));
+	assert((hstb->table = malloc(sizeof(DList) * buckets)));
 	hstb->elements = 0;
 	hstb->buckets = buckets;
 	hstb->hashf = hashf;
 	hstb->cmpf  = cmpf;
 	hstb->dstf  = dstf;
 	hstb->cpyf  = cpyf;
+
+	for (int i = 0; i < buckets; i++)
+		hstb->table[i] = NULL;
+
 	return hstb;
 }
 
@@ -28,6 +32,7 @@ void chash_destroy(CHash hstb) {
 		if (hstb->table[i] != NULL)
 			dlist_destroy(&hstb->table[i], hstb->dstf);
 	free(hstb->table);
+	free(hstb);
 }
 
 void chash_insert_tour(void* data, void* hstb) {
@@ -59,7 +64,8 @@ int chash_rehash(CHash hstb) {
 
 int chash_insert(CHash hstb, void* data) {
 	chash_rehash(hstb);
-	unsigned i = (unsigned)hstb->hashf(data) % hstb->buckets;
+	int i = (unsigned)hstb->hashf(data) % hstb->buckets;
+
 	if (hstb->table[i] == NULL) {
 		hstb->table[i] = dlist_make();
 		hstb->elements++;

@@ -39,8 +39,7 @@ void dlist_tour(DList list, VisitorFunc visitf, Order ord) {
 				temp = tbdest->next;
 				visitf(tbdest->data);
 			}
-			visitf(list->last->data);
-		} else if (ord == 1) {
+			visitf(list->last->data); } else if (ord == 1) {
 			DNode *temp = list->last;
 			while (temp != list->first) {
 				DNode *tbdest = temp;

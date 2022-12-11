@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-Cache cache_make(char* word,int len, char cached){
+Cache cache_make(char* word, int len){
 	Cache new_cache = malloc(sizeof(struct _Cache));
 	new_cache->wrd = malloc(sizeof(char) * (len + 1));
 	memcpy(new_cache->wrd, word, len);
 	new_cache->wrd[len] = 0;
 	new_cache->suggs = calloc(MAX_SUGGESTIONS, sizeof(char*) * MAX_SUGGESTIONS);
 	new_cache->n_suggs = 0;
-	new_cache->cached = cached;
 
 	return new_cache;
 }
@@ -34,11 +33,12 @@ int cache_add_sugg(Cache cache, char* sugg, int len){
 	return 0;
 }
 
-void cache_destroy(Cache* cache) {
-	free((*cache)->wrd);
-	for (int i = 0; i < (*cache)->n_suggs; i++)
-		free((*cache)->suggs[i]);
-	free(*cache);
+void cache_destroy(Cache cache) {
+	free(cache->wrd);
+	for (int i = 0; i < cache->n_suggs; i++)
+		free(cache->suggs[i]);
+	free(cache->suggs);
+	free(cache);
 }
 
 int cache_compare(Cache cache1, Cache cache2) {

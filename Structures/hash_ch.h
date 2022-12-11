@@ -1,6 +1,7 @@
 #ifndef __HASHTB_CH_H__
 #define __HASHTB_CH_H__
 #include "dlist.h"
+#include "dlista.h"
 
 typedef int (*HashFunc)(void *data);
 

@@ -44,7 +44,7 @@ struct _Data data_make(Trie trie, CHash cache_hstb){
 }
 
 void data_add_cache(char* word, int len, Data data) {
-	data->cache = cache_make(word, len, NOT_CACHED);
+	data->cache = cache_make(word, len);
 }
 
 void dist_all(char* word,int len, Data data) {
