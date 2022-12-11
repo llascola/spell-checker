@@ -21,6 +21,7 @@ int dist_insert(char *w, int len, char* buff, void* data, void func(char*,int,vo
 	int buff_len = len + 1;
 	memcpy(buff + 1, w, len);
 	buff[0] = 97;
+	buff[buff_len] = 0;
 	for (int pos = 0; pos < buff_len; pos++) {
 		for (int ch = 0; ch < 26; ch++) {
 			func(buff, buff_len, data);
@@ -69,7 +70,8 @@ int dist_remplace(char *w, int len, void* data, void func(char*,int,void*)) {
 
 int dist_split(char *w, int len, char* buff, void* data, VisitFunc2 func) {
 	int buffLen = len + 1;
-	memcpy(buff + 1, w, buffLen + 1);
+	memcpy(buff + 1, w, buffLen);
+	buff[buffLen] = 0;
 	for (int i = 1; i < len; i++) {
 		buff[i - 1] = buff[i];
 		buff[i] = *" ";

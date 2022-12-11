@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 void assert_file(FILE* file){
 	if (file == NULL){
@@ -16,19 +17,22 @@ int get_text_word(FILE* text, char* buff, int *line) {
 	while((c = getc(text)) != EOF) {
 		c = tolower(c);
 		if (isalpha(c)) {
-			buff[len] = c;
-			len++;
+			buff[len++] = c;
 		} else {
-			if (len != 0) {
+			if ( c == '\n') { // 32 <=> " ", 10 <=> '\n' 
 				buff[len] = '\0';
-				len = 0;
-			}
-			if (c == 10) // 10 <=> '\n' 
 				(*line)++;
-		}
+				return len;
+			}
+			if (c == ' '){
+				buff[len] = '\0';
+				return len;
+			} 
 	}
+}
 	return len;
 }
+
 
 void read_dictionary(char* dictFilePath, Trie trie){
 	FILE *dictFile = fopen(dictFilePath,"r");
@@ -56,8 +60,9 @@ CHash read_cache(char* cacheFilePath, int table_size) {
 	char buffWord[255];
 	int numSugg;
 	int len;
-	unsigned char ch;
-
+	if (getc(cacheFile) == EOF) 
+		return hstb; 
+	ungetc(1, cacheFile);
 	while (!feof(cacheFile)) {
 		fscanf(cacheFile, "%[^,], %d, ", buffWord, &numSugg);
 		len = strlen(buffWord);
@@ -100,8 +105,11 @@ void print_cache_data(const char* cacheFilePath, Cache cache) {
 	assert_file(cacheFile);
 	char **suggs = cache_sugg(cache);
 	int numSugg = cache_n_sugg(cache);
-
 	fprintf(cacheFile, "%s, %d, ", cache->wrd, numSugg);
+	if (!numSugg){
+		fprintf(cacheFile, "\n");
+		return;
+	}
 	for (int i = 0; i < numSugg - 1; i++)
 		fprintf(cacheFile,"%s, ",suggs[i]);
 	fprintf(cacheFile, "%s.\n",suggs[numSugg - 1]);

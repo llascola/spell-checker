@@ -3,7 +3,7 @@
 #define MAX_SUGGESTIONS 5
 #define NOT_CACHED 0
 #define CACHED 1
-#include "utils.h"
+#include "../Source/utils.h"
 
 struct _Cache {
 	int n_suggs;

@@ -41,7 +41,7 @@ char trie_search(Trie t_root, char *wrd, int len) {
 	for (int i = 0; i < len; i++) {
 		int c = (unsigned char)wrd[i] - 97;
 		if (tmp->chars[c] == NULL) 
-			return -1;
+			return 0;
 		tmp = tmp->chars[c];
 	}
 	return tmp->state;

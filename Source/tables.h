@@ -1,7 +1,7 @@
 #ifndef __TABLES__
 #define __TABLES__
 #define	INIT_HSTB_SIZE 1555
-#include "../Structures/Hash/hash_ch.h"
+#include "../Structures/hash_ch.h"
 #include "../Structures/cache.h"
 #include "../Structures/word.h"
 #include "utils.h"

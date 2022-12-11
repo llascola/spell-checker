@@ -4,6 +4,11 @@
 #include <assert.h>
 #include <stdio.h>
 
+
+static void *id(void* data) { return data; }
+
+static void null(__attribute__((unused)) void *data) { return; }
+
 CHash chash_make(int buckets, CopyFunc cpyf, DestroyFunc dstf, 
 		 CompareFunc cmpf, HashFunc hashf) {
 	CHash hstb;
@@ -29,7 +34,7 @@ void chash_insert_tour(void* data, void* hstb) {
 	unsigned i = (unsigned)((CHash)hstb)->hashf(data) % ((CHash)hstb)->buckets;
 	if (((CHash)hstb)->table[i] == NULL)
 		((CHash)hstb)->table[i] = dlist_make();
-	dlist_insert(((CHash)hstb)->table[i], data, ((CHash)hstb)->cpyf, BACKWARD);
+	dlist_insert(((CHash)hstb)->table[i], data, id, BACKWARD);
 	return;
 }
 
@@ -42,7 +47,7 @@ int chash_rehash(CHash hstb) {
 		for(int i = 0; i < oldSize; i++) {
 			if ( tmp[i] != NULL ) {
 				dlist_tour_ext(tmp[i], chash_insert_tour, (void*) hstb, FORWARD);
-				dlist_destroy(&tmp[i], hstb->dstf);
+				dlist_destroy(&tmp[i], null);
 			}
 		}
 		free(tmp);

@@ -1,6 +1,7 @@
 #include "tables.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 void *id(void *data) {
 	return data;
@@ -14,8 +15,8 @@ unsigned word_hash(Word distWord){
 	return hash_len(distWord->word, distWord->len);
 }
 
-int cache_word_compare(char* word, Cache cache){
-	return strcmp(word, cache->wrd);
+int cache_word_compare(Cache cache1, Cache cache2){
+	return strcmp(cache1->wrd, cache2->wrd);
 }
 
 CHash cache_hstb_make(int table_size){

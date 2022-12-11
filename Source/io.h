@@ -1,7 +1,7 @@
 #ifndef __INPUT_OUPUT__
 #define __INPUT_OUPUT__
 #include <stdio.h>
-#include "../Structures/Trie/trie.h"
+#include "../Structures/trie.h"
 #include "tables.h"
 
 int get_text_word(FILE* text, char* buff, int *line); 

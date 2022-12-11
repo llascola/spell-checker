@@ -165,7 +165,7 @@ void* dlist_search(DList list, void* data, CompareFunc cmpf) {
 	if (dlist_empty(list))
 		return NULL;
 	int flag;
-	DNode* tmp;
+	DNode* tmp = list->first;
 	for(;(flag = cmpf(data, tmp->data)) && tmp->next;tmp = tmp->next);
 	return flag?NULL:tmp->data;
 }

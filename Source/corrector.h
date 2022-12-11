@@ -3,7 +3,7 @@
 #define MAX_DISTANCES 3
 #include "dist.h"
 #include "tables.h"
-#include "../Structures/Trie/trie.h"
+#include "../Structures/trie.h"
 #include "../Structures/cache.h"
 #include "../Structures/word.h"
 

@@ -1,4 +1,5 @@
 #include "corrector.h"
+#include <stdlib.h>
 
 Cache data_reset(Data data) {
 	Cache cache = data->cache;
@@ -12,7 +13,7 @@ Cache data_reset(Data data) {
 void sugg_look_up_1(char* word, int len, Data data){
 	if (data->flag)
 		return;
-	if (trie_search(data->dict, word, len) == *"d")
+	if (trie_search(data->dict, word, len) )
 		data->flag = cache_add_sugg(data->cache, word, len);
 	if (data->dist != MAX_DISTANCES) {
 		Word new_word = word_make(word, len);
@@ -24,8 +25,8 @@ void sugg_look_up_2(char* word, int len1, int len2, Data data) {
 	if (data->flag){
 		return;
 	}
-	if ((trie_search(data->dict, word, len1) == *"d") &&
-			(trie_search(data->dict, word + len1 + 1, len2) == *"d")) {
+	if ((trie_search(data->dict, word, len1) ) &&
+			(trie_search(data->dict, word + len1 + 1, len2))) {
 		data->flag = cache_add_sugg(data->cache, word, len1 + len2);
 	}
 } 
@@ -35,10 +36,10 @@ struct _Data data_make(Trie trie, CHash cache_hstb){
 	new_data.dict = trie;
 	new_data.fun1 = (VisitFunc)sugg_look_up_1;
 	new_data.fun2 = (VisitFunc2)sugg_look_up_2;
+	new_data.hstb = malloc(sizeof(CHash) * MAX_DISTANCES);
 	new_data.hstb[0] = cache_hstb;
 	new_data.flag = 0;
 	new_data.dist = 0;
-	new_data.hstb = malloc(sizeof(CHash) * MAX_DISTANCES);
   return new_data;
 }
 
@@ -63,7 +64,7 @@ Cache sugg_look_up(char* word, int len, Data data){
 	data_add_cache(word, len, data);
 	data->hstb[++data->dist] = word_hstb_make();
 	dist_all(word, len, data);
-	while(data->dist < MAX_DISTANCES && data->flag) {
+	while(data->dist < MAX_DISTANCES && !data->flag) {
 		data->hstb[++data->dist] = word_hstb_make();
 		chash_visit_extra(data->hstb[data->dist - 1], (void*) data, (VisitExtFunc) dist_all_visit);
 	}
