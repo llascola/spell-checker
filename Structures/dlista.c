@@ -35,6 +35,16 @@ void dlist_recorrer(DLista lista, FuncionVisitar visitar,
   }
 }
 
+void dlist_recorrer_extra(DLista lista, FuncionVisitarExtra visitar,
+                          void* extra, DListaOrdenDeRecorrido orden) {
+  DNodo *nodo =
+      orden == DLIST_RECORRIDO_HACIA_ADELANTE ? lista.primero : lista.ultimo;
+  while (nodo != NULL) {
+    visitar(nodo->dato, extra);
+    nodo = orden == DLIST_RECORRIDO_HACIA_ADELANTE ? nodo->sig : nodo->ant;
+  }
+}
+
 DLista dlist_insertar_inicio(DLista lista, void *dato, FuncionCopiar copiar) {
   DNodo *nuevoNodo = malloc(sizeof(DNodo));
   nuevoNodo->ant = NULL;
@@ -74,32 +84,44 @@ void *dlist_dato(DLista lista, unsigned int pos, FuncionCopiar copiar) {
   return copiar(nodo->dato);
 }
 
+void *dlist_busqueda(DLista lista, void *dato,
+										 FuncionComparadora compara,
+										 FuncionCopiar copia) {
+	if (lista.primero == NULL)
+		return NULL;
+	int bandera;
+	DNodo *nodo;
+	for (nodo = lista.primero; (bandera = compara(dato, nodo->dato)) && nodo->sig != NULL ;
+			 nodo = nodo->sig);
+	return bandera?NULL:copia(nodo->dato);
+}
+
 /**
  * Elimina el nodo de la posici\u00f3n dada.
  * Si pos >= largo(lista), elimina el \u00faltimo nodo.
  */
-DLista dlist_eliminar(DLista lista, unsigned int pos, FuncionDestruir destruir) {
+DLista dlist_eliminar(DLista lista, void* dato,FuncionComparadora compara, FuncionDestruir destruir) {
   if (lista.primero == NULL)
     return lista;
-  else if (lista.primero == lista.ultimo) {
+  else if (lista.primero == lista.ultimo && !compara(dato, lista.primero->dato)) {
     destruir(lista.primero->dato);
     free(lista.primero);
     lista.primero = NULL;
     lista.ultimo = NULL;
     return lista;
   }
-  DNodo *nodo;
-  for (nodo = lista.primero; nodo->sig != NULL && pos > 0;
-       nodo = nodo->sig, pos--);
-  if (nodo->ant == NULL)
-    lista.primero = nodo->sig;
-  else
-    nodo->ant->sig = nodo->sig;
-  if (nodo->sig == NULL)
-    lista.ultimo = nodo->ant;
-  else
-    nodo->sig->ant = nodo->ant;
-  destruir(nodo->dato);
+	
+  DNodo *nodo = lista.primero;
+	int bandera = compara(dato, nodo->dato);
+
+  for (;bandera && nodo->sig != NULL ; nodo = nodo->sig)
+		bandera = compara(dato, nodo->dato);
+	if (!bandera)	
+		return lista;
+	nodo->ant->sig = nodo->sig;
+	if (nodo->sig == NULL)
+		lista.ultimo = nodo->ant;
+	destruir(nodo->dato);
   free(nodo);
   return lista;
 }

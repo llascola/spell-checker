@@ -26,4 +26,6 @@ struct _Data data_make(Trie trie, CHash cache_hstb);
 
 Cache sugg_look_up(char* word, int len, Data data);
 
+void data_free(struct _Data data);
+
 #endif

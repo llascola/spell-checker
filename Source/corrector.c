@@ -5,8 +5,6 @@ Cache data_reset(Data data) {
 	Cache cache = data->cache;
 	data->flag = 0;
 	data->dist = 0;
-	for (int i = 1; i < MAX_DISTANCES; i++)
-		chash_destroy(data->hstb[i]);
 	return cache;
 }
 
@@ -36,11 +34,17 @@ struct _Data data_make(Trie trie, CHash cache_hstb){
 	new_data.dict = trie;
 	new_data.fun1 = (VisitFunc)sugg_look_up_1;
 	new_data.fun2 = (VisitFunc2)sugg_look_up_2;
-	new_data.hstb = malloc(sizeof(CHash) * MAX_DISTANCES);
+	new_data.hstb = calloc(MAX_DISTANCES, 8);
 	new_data.hstb[0] = cache_hstb;
 	new_data.flag = 0;
 	new_data.dist = 0;
   return new_data;
+}
+
+void data_free(struct _Data data){
+	trie_destroy(data.dict);
+	chash_destroy(data.hstb[0]);
+	free(data.hstb);
 }
 
 void data_add_cache(char* word, int len, Data data) {
@@ -68,5 +72,7 @@ Cache sugg_look_up(char* word, int len, Data data){
 		data->hstb[++data->dist] = word_hstb_make();
 		chash_visit_extra(data->hstb[data->dist - 1], (void*) data, (VisitExtFunc) dist_all_visit);
 	}
+	for (int i = 1; i <= data->dist; i++)
+		chash_destroy(data->hstb[i]);
 	return data_reset(data);
 }

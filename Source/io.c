@@ -60,8 +60,10 @@ CHash read_cache(char* cacheFilePath, int table_size) {
 	char buffWord[255];
 	int numSugg;
 	int len;
-	if (getc(cacheFile) == EOF) 
+	if (getc(cacheFile) == EOF){ 
+		fclose(cacheFile);
 		return hstb; 
+	}
 	ungetc(1, cacheFile);
 	while (!feof(cacheFile)) {
 		fscanf(cacheFile, "%[^,], %d, ", buffWord, &numSugg);
@@ -90,6 +92,7 @@ void print_text_suggestions(const char* suggestionFilePath, Cache cache, int lin
 	fprintf(suggestions, "Line %d, \"%s\" not found in the dictionaty.\n", line, cache->wrd);
 	if (!numSugg) {
 		fprintf(suggestions, "Suggestions not found.\n");
+		fclose(suggestions);
 		return;
 	}
 	fprintf(suggestions, "Maybe you meant: ");
@@ -108,6 +111,7 @@ void print_cache_data(const char* cacheFilePath, Cache cache) {
 	fprintf(cacheFile, "%s, %d, ", cache->wrd, numSugg);
 	if (!numSugg){
 		fprintf(cacheFile, "\n");
+		fclose(cacheFile);
 		return;
 	}
 	for (int i = 0; i < numSugg - 1; i++)

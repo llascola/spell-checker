@@ -51,7 +51,7 @@ int test1(){
 	chash_insert(table, cache3);
 	chash_visit(table, (VisitorFunc)&print_cache_custom);
 	printf("Hola mundo\n");
-	chash_delete(table, cache3);
+	chash_delete(table,(void*) cache3);
 	chash_visit(table, (VisitorFunc)&print_cache_custom);
 	printf("Hola mundo\n");
 
@@ -80,15 +80,15 @@ int test2(){
 	chash_destroy(table);
 	return 0;
 }
-
 /*
 int main(){
-	test0();
+	//test0();
 	//test1();
-	//test2();
+	test2();
 	return 0;
 }
 */
+
 
 
 int main(int argc, char* argv[]) {
@@ -140,9 +140,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	fclose(text);
-	trie_destroy(trie);
+	data_free(data);
 	return 0;	
 
 
 }
+
 

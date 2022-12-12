@@ -9,11 +9,11 @@ inline static void *id(void* data) { return data; }
 
 inline static void null(__attribute__((unused)) void *data) { return; }
 
-CHash chash_make(int buckets, CopyFunc cpyf, DestroyFunc dstf, 
+CHash chash_make(unsigned buckets, CopyFunc cpyf, DestroyFunc dstf, 
 		 CompareFunc cmpf, HashFunc hashf) {
 	CHash hstb;
 	assert((hstb = malloc(sizeof(struct _CHash))));
-	assert((hstb->table = malloc(sizeof(DList) * buckets)));
+	assert((hstb->table = malloc(sizeof(DLista) * buckets)));
 	hstb->elements = 0;
 	hstb->buckets = buckets;
 	hstb->hashf = hashf;
@@ -21,39 +21,37 @@ CHash chash_make(int buckets, CopyFunc cpyf, DestroyFunc dstf,
 	hstb->dstf  = dstf;
 	hstb->cpyf  = cpyf;
 
-	for (int i = 0; i < buckets; i++)
-		hstb->table[i] = NULL;
+	for (unsigned i = 0; i < buckets; i++)
+		hstb->table[i] = dlist_crear();
 
 	return hstb;
 }
 
 void chash_destroy(CHash hstb) {
-	for (int i = 0; i < hstb->buckets; i++)
-		if (hstb->table[i] != NULL)
-			dlist_destroy(&hstb->table[i], hstb->dstf);
+	for (unsigned i = 0; i < hstb->buckets; i++)
+			dlist_destruir(hstb->table[i], hstb->dstf);
 	free(hstb->table);
 	free(hstb);
 }
 
-void chash_insert_tour(void* data, void* hstb) {
-	unsigned i = (unsigned)((CHash)hstb)->hashf(data) % ((CHash)hstb)->buckets;
-	if (((CHash)hstb)->table[i] == NULL)
-		((CHash)hstb)->table[i] = dlist_make();
-	dlist_insert(((CHash)hstb)->table[i], data, id, BACKWARD);
+void chash_insert_tour(void* data, CHash hstb) {
+	unsigned i = hstb->hashf(data) % hstb->buckets;
+	hstb->table[i] = dlist_insertar_final(hstb->table[i], data, id);
 	return;
 }
 
 int chash_rehash(CHash hstb) {
 	if((100 * hstb->elements) >= (75 * hstb->buckets)) {
-		int oldSize = hstb->buckets;
+		unsigned oldSize = hstb->buckets;
 		hstb->buckets = hstb->buckets * 2;
-		DList *tmp = hstb->table;
-		hstb->table = calloc(hstb->buckets, sizeof(DList));
-		for(int i = 0; i < oldSize; i++) {
-			if ( tmp[i] != NULL ) {
-				dlist_tour_ext(tmp[i], chash_insert_tour, (void*) hstb, FORWARD);
-				dlist_destroy(&tmp[i], null);
-			}
+		DLista *tmp = hstb->table;
+		hstb->table = malloc(sizeof(DList) * hstb->buckets);
+	  for (unsigned i = 0; i < hstb->buckets; i++)
+			hstb->table[i] = dlist_crear();
+		for(unsigned i = 0; i < oldSize; i++) {
+				dlist_recorrer_extra(tmp[i],(FuncionVisitarExtra) chash_insert_tour,
+														 (void*) hstb, DLIST_RECORRIDO_HACIA_ADELANTE);
+				dlist_destruir(tmp[i], null);
 		}
 		free(tmp);
 		return 1;
@@ -61,7 +59,7 @@ int chash_rehash(CHash hstb) {
 		return 0;
 }
 
-
+/*
 int chash_insert(CHash hstb, void* data) {
 	chash_rehash(hstb);
 	int i = (unsigned)hstb->hashf(data) % hstb->buckets;
@@ -74,29 +72,31 @@ int chash_insert(CHash hstb, void* data) {
 	hstb->elements++;
 	return dlist_insert(hstb->table[i], data, hstb->cpyf, BACKWARD);
 }
+*/
+int chash_insert(CHash hstb, void* data) {
+	chash_rehash(hstb);
+	unsigned i = hstb->hashf(data) % hstb->buckets;
+	hstb->table[i] = dlist_insertar_final(hstb->table[i], data, hstb->cpyf);
+	return 0;
+}
 
 void* chash_search(CHash hstb, void* data) {
-	unsigned i = (unsigned)hstb->hashf(data) % hstb->buckets;
-	return dlist_search(hstb->table[i], data, hstb->cmpf);
+	unsigned i = hstb->hashf(data) % hstb->buckets;
+	return dlist_busqueda(hstb->table[i], data, hstb->cmpf, hstb->cpyf);
 }
 
 int chash_delete(CHash hstb, void* data) {
-	unsigned i = (unsigned)hstb->hashf(data) % hstb->buckets;
-	if (dlist_delete(hstb->table[i], data, hstb->cmpf, hstb->dstf))
-		return 1;
-	else
-		hstb->elements--;
+	unsigned i = hstb->hashf(data) % hstb->buckets;
+	hstb->table[i] = dlist_eliminar(hstb->table[i], data, hstb->cmpf, hstb->dstf);
 	return 0;
 }
 
 void chash_visit(CHash hstb, VisitorFunc vistif) {
-	for (int i = 0; i < hstb->buckets; i++) 
-		if (hstb->table[i] != NULL)
-			dlist_tour(hstb->table[i], vistif, FORWARD);
+	for (unsigned i = 0; i < hstb->buckets; i++) 
+			dlist_recorrer(hstb->table[i], vistif, DLIST_RECORRIDO_HACIA_ADELANTE);
 }
 
 void chash_visit_extra(CHash hstb, void* data, VisitExtFunc vistif) {
-	for (int i = 0; i < hstb->buckets; i++) 
-		if (hstb->table[i] != NULL)
-			dlist_tour_ext(hstb->table[i], vistif, data, FORWARD);
+	for (unsigned i = 0; i < hstb->buckets; i++) 
+			dlist_recorrer_extra(hstb->table[i], vistif, data, DLIST_RECORRIDO_HACIA_ADELANTE);
 }

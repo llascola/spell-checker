@@ -6,9 +6,9 @@
 typedef int (*HashFunc)(void *data);
 
 struct _CHash {
-	int buckets;
-	int elements;
-	DList* table;
+	unsigned buckets;
+	unsigned elements;
+	DLista* table;
 	CopyFunc cpyf;
 	DestroyFunc dstf;
 	CompareFunc cmpf;
@@ -17,7 +17,7 @@ struct _CHash {
 
 typedef struct _CHash* CHash;
 
-CHash chash_make(int buckets, CopyFunc cpyf, DestroyFunc dstf, 
+CHash chash_make(unsigned buckets, CopyFunc cpyf, DestroyFunc dstf, 
 								 CompareFunc cmpf, HashFunc hashf);
 
 void chash_destroy(CHash hstb);
