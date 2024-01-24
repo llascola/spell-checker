@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-int dist_swap(char *w, int len, void* data, void func(char*,int,void*)) {
+int dist_swap(char *w, int len, void* data, VisitFunc func) {
 	char aux;
 	for (int i = 0; i < len - 1; i++) {
 		aux = w[i] ;
@@ -17,7 +17,7 @@ int dist_swap(char *w, int len, void* data, void func(char*,int,void*)) {
 	return 0;
 }
 
-int dist_insert(char *w, int len, char* buff, void* data, void func(char*,int,void*)) {
+int dist_insert(char *w, int len, char* buff, void* data, VisitFunc func) {
 	int buff_len = len + 1;
 	memcpy(buff + 1, w, len);
 	buff[0] = 97;
@@ -34,7 +34,7 @@ int dist_insert(char *w, int len, char* buff, void* data, void func(char*,int,vo
 }
 
 
-int dist_delet(char *w, int len, void* data, void func(char*,int,void*)) {
+int dist_delet(char *w, int len, void* data, VisitFunc func) {
 	char* w_del = w + 1;
 	char aux;
 	for (int i = 1; i < len; i++) {
@@ -53,7 +53,7 @@ int dist_delet(char *w, int len, void* data, void func(char*,int,void*)) {
 	return 0;
 }
 
-int dist_remplace(char *w, int len, void* data, void func(char*,int,void*)) {
+int dist_remplace(char *w, int len, void* data, VisitFunc func) {
 	char aux;
 	for (int pos = 0; pos < len; pos++) {
 		aux = w[pos];

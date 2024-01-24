@@ -1,0 +1,90 @@
+Linea 1, "lorem" no se encontro en el diccionario.
+Quiza quiso decir: lorea, loree, loreo, lores, norme
+Linea 1, "ipsum" no se encontro en el diccionario.
+Quiza quiso decir: insuma, insume, insumi, insumo, ipsi
+Linea 1, "sit" no se encontro en el diccionario.
+Quiza quiso decir: si, sita, sito, bit, set
+Linea 1, "amet" no se encontro en el diccionario.
+Quiza quiso decir: ame, amel, amen, ames, amo et
+Linea 1, "consectetur" no se encontro en el diccionario.
+Quiza quiso decir: conecte jur, conecte mur, conecte sur, conecte ter, conecte tui
+Linea 1, "adipisicing" no se encontro en el diccionario.
+No se encontraron sugerencias.
+Linea 2, "elit" no se encontro en el diccionario.
+Quiza quiso decir: elite, et, bit, el, lei
+Linea 2, "voluptatem" no se encontro en el diccionario.
+Quiza quiso decir: voluntades, voluta item, voluta tea, voluta ten, voluta ter
+Linea 2, "velit" no se encontro en el diccionario.
+Quiza quiso decir: velite, velis, veliz, melito, melis
+Linea 2, "aliquam" no se encontro en el diccionario.
+Quiza quiso decir: licua, ali luas, ali luma, aljuma, aliaba
+Linea 2, "iure" no se encontro en el diccionario.
+Quiza quiso decir: ire, piure, cure, dure, jure
+Linea 2, "nulla" no se encontro en el diccionario.
+Quiza quiso decir: nula, aulla, bulla, fulla, hulla
+Linea 2, "totam" no se encontro en el diccionario.
+Quiza quiso decir: totem, total, toza, tozad, tozal
+Linea 3, "optio" no se encontro en el diccionario.
+Quiza quiso decir: opio, opto, optico, optimo, poto
+Linea 3, "illo" no se encontro en el diccionario.
+Quiza quiso decir: lilo, aillo, fillo, millo, pillo
+Linea 3, "sint" no se encontro en el diccionario.
+Quiza quiso decir: sin, sant, sino, zinc, in
+Linea 3, "reiciendis" no se encontro en el diccionario.
+Quiza quiso decir: rescindis, rehicierais, rehiciereis, reis fendis, rei hiendas
+Linea 3, "voluptates" no se encontro en el diccionario.
+Quiza quiso decir: voluta tes, voluntades, voluta ates, vole pates, volita tes
+Linea 3, "sapiente" no se encontro en el diccionario.
+Quiza quiso decir: saliente, sargente, sapeen te, sari ente, sarmiente
+Linea 3, "voluptatem" no se encontro en el diccionario.
+Quiza quiso decir: voluntades, voluta item, voluta tea, voluta ten, voluta ter
+Linea 3, "molestiae" no se encontro en el diccionario.
+Quiza quiso decir: molestia, molestias, moles trae, molestare, molestase
+Linea 3, "inventore" no se encontro en el diccionario.
+Quiza quiso decir: inventor, invento re, inventores, inventare, inventora
+Linea 4, "commodi" no se encontro en el diccionario.
+Quiza quiso decir: comto di, comedi, combo di, comodin, conmovi
+Linea 4, "veritatis" no se encontro en el diccionario.
+Quiza quiso decir: vertais, ver isatis, vertiais, meritais, peritais
+Linea 4, "velit" no se encontro en el diccionario.
+Quiza quiso decir: velite, velis, veliz, melito, melis
+Linea 4, "aliquid" no se encontro en el diccionario.
+Quiza quiso decir: ali quid, liquida, liquide, liquido, alli quid
+Linea 4, "ipsam" no se encontro en el diccionario.
+Quiza quiso decir: pisa, pisad, pisan, pisar, pisas
+Linea 5, "corrupti" no se encontro en el diccionario.
+Quiza quiso decir: corrupta, corrupto, corrupia, corruptas, corruptor
+Linea 5, "nihil" no se encontro en el diccionario.
+Quiza quiso decir: ni oil, ipil, pipil, nipis, iril
+Linea 5, "architecto" no se encontro en el diccionario.
+Quiza quiso decir: archi teto, archi tacto, arquitecto, archi techo, archi teclo
+Linea 5, "unde" no se encontro en el diccionario.
+Quiza quiso decir: une, un de, cunde, funde, hunde
+Linea 5, "ipsa" no se encontro en el diccionario.
+Quiza quiso decir: isa, pisa, ipsi, nipa, nipas
+Linea 5, "consequatur" no se encontro en el diccionario.
+Quiza quiso decir: cose quater, conste quater, monse quater, canse quater, cense quater
+Linea 5, "excepturi" no se encontro en el diccionario.
+Quiza quiso decir: exceptar, exceptua, exceptuais, exceptuad, exceptuan
+Linea 6, "numquam" no se encontro en el diccionario.
+Quiza quiso decir: numo mam, numidas, numular, numerad, numeral
+Linea 6, "incidunt" no se encontro en el diccionario.
+Quiza quiso decir: incidan, inciden, incidente, incitan, incitante
+Linea 6, "dolore" no se encontro en el diccionario.
+Quiza quiso decir: dolor, dolo re, adolore, dolobre, dolores
+Linea 6, "provident" no se encontro en el diccionario.
+Quiza quiso decir: providente, pro vidente, providentes, previdente, proviene
+Linea 6, "iusto" no se encontro en el diccionario.
+Quiza quiso decir: busto, fusto, gusto, justo, rusto
+Linea 6, "repellat" no se encontro en el diccionario.
+Quiza quiso decir: repella, repellad, repellan, repellar, repellas
+Linea 6, "sint" no se encontro en el diccionario.
+Quiza quiso decir: sin, sant, sino, zinc, in
+Linea 6, "asperiores" no se encontro en el diccionario.
+Quiza quiso decir: aspersores, aspe rieres, aspergieres, aspersor es, aspero ores
+Linea 6, "doloribus" no se encontro en el diccionario.
+Quiza quiso decir: dolor obus, dolo ribas, dolor ibas, doloridas, dolor ibis
+Linea 6, "ab" no se encontro en el diccionario.
+Quiza quiso decir: aba, ad, ah, aj, al
+Linea 7, "voluptates" no se encontro en el diccionario.
+Quiza quiso decir: voluta tes, voluntades, voluta ates, vole pates, volita tes

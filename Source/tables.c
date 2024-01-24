@@ -19,8 +19,8 @@ int cache_word_compare(Cache cache1, Cache cache2){
 	return strcmp(cache1->wrd, cache2->wrd);
 }
 
-CHash cache_hstb_make(int table_size){
-	return chash_make(table_size,
+CHash cache_hstb_make(){
+	return chash_make(CACHE_HSTB_SIZE,
 										(CopyFunc) &id,
 										(DestroyFunc) &cache_destroy,
 										(CompareFunc) &cache_word_compare,
@@ -28,7 +28,7 @@ CHash cache_hstb_make(int table_size){
 }
 
 CHash word_hstb_make() {
-	CHash distHstb = chash_make(INIT_HSTB_SIZE,
+	CHash distHstb = chash_make(WORD_HSTB_SIZE,
 															&id,
 															(DestroyFunc) &word_dest,
 															(CompareFunc) &word_compare,

@@ -33,7 +33,6 @@ int get_text_word(FILE* text, char* buff, int *line) {
 	return len;
 }
 
-
 void read_dictionary(char* dictFilePath, Trie trie){
 	FILE *dictFile = fopen(dictFilePath,"r");
 	assert_file(dictFile);
@@ -53,18 +52,19 @@ void read_dictionary(char* dictFilePath, Trie trie){
 	fclose(dictFile);
 }
 
-CHash read_cache(char* cacheFilePath, int table_size) {
-	CHash hstb = cache_hstb_make(table_size);
+CHash read_cache(char* cacheFilePath) {
+	CHash hstb = cache_hstb_make();
 	FILE *cacheFile = fopen(cacheFilePath,"r");
 	assert_file(cacheFile);
 	char buffWord[255];
 	int numSugg;
 	int len;
-	if (getc(cacheFile) == EOF){ 
+	char c;
+	if ((c = getc(cacheFile)) == EOF){ 
 		fclose(cacheFile);
 		return hstb; 
 	}
-	ungetc(1, cacheFile);
+	ungetc(c, cacheFile);
 	while (!feof(cacheFile)) {
 		fscanf(cacheFile, "%[^,], %d, ", buffWord, &numSugg);
 		len = strlen(buffWord);
@@ -74,9 +74,11 @@ CHash read_cache(char* cacheFilePath, int table_size) {
 			len = strlen(buffWord);
 			cache_add_sugg(cache, buffWord, len);
 		}
+		if (numSugg) {
 		fscanf(cacheFile, "%[^\n]\n", buffWord);
 		len = strlen(buffWord);
 		cache_add_sugg(cache, buffWord, len);
+		}
 		chash_insert(hstb, (void*) cache);
 	}
 	fclose(cacheFile);
@@ -89,16 +91,16 @@ void print_text_suggestions(const char* suggestionFilePath, Cache cache, int lin
 	char **suggs = cache_sugg(cache);
 	int numSugg = cache_n_sugg(cache);
 
-	fprintf(suggestions, "Line %d, \"%s\" not found in the dictionaty.\n", line, cache->wrd);
+	fprintf(suggestions, "Linea %d, \"%s\" no se encontro en el diccionario.\n", line, cache->wrd);
 	if (!numSugg) {
-		fprintf(suggestions, "Suggestions not found.\n");
+		fprintf(suggestions, "No se encontraron sugerencias.\n");
 		fclose(suggestions);
 		return;
 	}
-	fprintf(suggestions, "Maybe you meant: ");
+	fprintf(suggestions, "Quiza quiso decir: ");
 	for (int i = 0; i < numSugg - 1; i++)
 		fprintf(suggestions,"%s, ",suggs[i]);
-	fprintf(suggestions, "%s.\n", suggs[numSugg - 1]);
+	fprintf(suggestions, "%s\n", suggs[numSugg - 1]);
 	fclose(suggestions);
 
 }

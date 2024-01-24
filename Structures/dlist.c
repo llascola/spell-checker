@@ -124,18 +124,6 @@ int dlist_delete(DList list, void* data, CompareFunc cmpf, DestroyFunc dstf) {
 	dstf(tmp->data);
 	free(tmp);
 	return 0;
-//	if (!flag && list->first->next) {
-//		tmp->prev->next = tmp->next;
-//		dstf(tmp->data);
-//		free(tmp);
-//		return 1;
-//	} else if (!flag) {
-//		dstf(tmp->data);
-//		free(tmp);
-//		list->first = list->last = NULL;
-//		return 1;
-//	} 
-//	return 0;		
 }
 
 int dlist_delete_pos(DList list, unsigned int pos, DestroyFunc destf) {
@@ -168,24 +156,4 @@ void* dlist_search(DList list, void* data, CompareFunc cmpf) {
 	for(;(flag = cmpf(data, tmp->data)) && tmp->next;tmp = tmp->next);
 	return flag?NULL:tmp->data;
 }
-
-//int dlist_insearch(DList list, void* data, CompareFunc cmpf, CopyFunc cpyf) {
-//	DNode *newNode;
-//	if (dlist_empty(list)) {
-//		assert((newNode = malloc(sizeof(struct _DNode))) != NULL);
-//		newNode->data = cpyf(data);
-//		list->first = list->last = newNode;
-//		newNode->prev = newNode->next = NULL;
-//		return 1;
-//	} else {
-//		int flag;
-//		for(DNode* tmp = list->first;
-//				!(flag = cmpf(data, tmp->data)) && tmp->next != NULL;
-//				tmp = tmp->next);
-//		if (flag) {
-//			
-//		}
-//	} 
-//	return 1;
-//}
 

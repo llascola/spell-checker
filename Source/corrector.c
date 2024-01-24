@@ -1,17 +1,14 @@
 #include "corrector.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
 
-Cache data_reset(Data data) {
-	Cache cache = data->cache;
-	data->flag = 0;
-	data->dist = 0;
-	return cache;
-}
-
+/* FuncVisit
+ */
 void sugg_look_up_1(char* word, int len, Data data){
 	if (data->flag)
 		return;
-	if (trie_search(data->dict, word, len) )
+	if ( cache_is_sugg(data->cache, word) && trie_search(data->dict, word, len) )
 		data->flag = cache_add_sugg(data->cache, word, len);
 	if (data->dist != MAX_DISTANCES) {
 		Word new_word = word_make(word, len);
@@ -19,13 +16,16 @@ void sugg_look_up_1(char* word, int len, Data data){
 	}
 }
 
+/* FuncVisit2
+ */
 void sugg_look_up_2(char* word, int len1, int len2, Data data) {
 	if (data->flag){
 		return;
 	}
-	if ((trie_search(data->dict, word, len1) ) &&
+	if (cache_is_sugg(data->cache, word) &&
+			(trie_search(data->dict, word, len1) ) &&
 			(trie_search(data->dict, word + len1 + 1, len2))) {
-		data->flag = cache_add_sugg(data->cache, word, len1 + len2);
+		data->flag = cache_add_sugg(data->cache, word, len1 + len2 + 1);
 	}
 } 
 
@@ -34,7 +34,8 @@ struct _Data data_make(Trie trie, CHash cache_hstb){
 	new_data.dict = trie;
 	new_data.fun1 = (VisitFunc)sugg_look_up_1;
 	new_data.fun2 = (VisitFunc2)sugg_look_up_2;
-	new_data.hstb = calloc(MAX_DISTANCES, 8);
+	new_data.hstb = malloc(sizeof(CHash) * MAX_DISTANCES);
+	assert(new_data.hstb);
 	new_data.hstb[0] = cache_hstb;
 	new_data.flag = 0;
 	new_data.dist = 0;
@@ -63,16 +64,30 @@ void dist_all_visit(Word word, Data data){
 	dist_all(word_string(word), word_len(word), data);
 }
 	
+Cache data_reset(Data data) {
+	if (data->dist == MAX_DISTANCES){
+		for(int i = 1; i < MAX_DISTANCES; i++)
+			chash_destroy(data->hstb[i]);
+	} else{
+		for(int i = 1; i <= data->dist; i++)
+			chash_destroy(data->hstb[i]);
+	}
+	
+	data->flag = 0;
+	data->dist = 0;
+	return data->cache;
+}
 
 Cache sugg_look_up(char* word, int len, Data data){
 	data_add_cache(word, len, data);
 	data->hstb[++data->dist] = word_hstb_make();
 	dist_all(word, len, data);
-	while(data->dist < MAX_DISTANCES && !data->flag) {
-		data->hstb[++data->dist] = word_hstb_make();
-		chash_visit_extra(data->hstb[data->dist - 1], (void*) data, (VisitExtFunc) dist_all_visit);
+
+	while(data->dist < MAX_DISTANCES  && !data->flag) {
+		if(++data->dist != MAX_DISTANCES)
+			data->hstb[data->dist] = word_hstb_make();
+		chash_visit_extra(data->hstb[data->dist - 1],
+				              (void*) data, (VisitExtFunc) dist_all_visit);
 	}
-	for (int i = 1; i <= data->dist; i++)
-		chash_destroy(data->hstb[i]);
 	return data_reset(data);
 }
